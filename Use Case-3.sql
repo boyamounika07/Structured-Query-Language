@@ -1,29 +1,48 @@
-CREATE TABLE customers (
-    customer_id INT NOT NULL AUTO_INCREMENT,
-    customer_code VARCHAR(12) NOT NULL,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    email VARCHAR(120) NOT NULL,
-    phone VARCHAR(15),
-    date_of_birth DATE,
-    city VARCHAR(80) NOT NULL,
-    state VARCHAR(80) NOT NULL,
-    postal_code VARCHAR(12) NOT NULL,
-    customer_type VARCHAR(15) NOT NULL DEFAULT 'Regular',
-    credit_limit DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT `uk_customer_code` UNIQUE (customer_code),
-    CONSTRAINT `uk_email` UNIQUE (email),
-    CONSTRAINT `uk_phone` UNIQUE (phone),
-    CONSTRAINT `pk_customers_customer_id` PRIMARY KEY (customer_id),
-    CONSTRAINT `chk_creidt_limit_non_negative` CHECK (credit_limit >= 0.00)
-);
-
-INSERT INTO customers (customer_code, first_name, last_name, email, phone, date_of_birth, city, state, postal_code) VALUES ('CST124', 'Raj', 'Gupta', 'raj@gmail.com', 9856298493, '2006-05-29', 'Hyderabad', 'Telangana', '578773');
-
-INSERT INTO customers (customer_code, first_name, last_name, email, phone, date_of_birth, city, state, postal_code, credit_limit) VALUES ('CST236', 'Niraj', 'Nambi', 'niraj@gmail.com', NULL, '2015-03-13', 'Vijayawada', 'Andhra Pradesh', '523772', 13000);
-
-INSERT INTO customers (customer_code, first_name, last_name, email, phone, date_of_birth, city, state, postal_code, credit_limit) VALUES ('CST729', 'Niraj', 'Chopra', 'niraj@gmail.com', NULL, '2016-12-31', 'Jaipur', 'Rajasthan', '598465', 23784.34);
+use cdg_hyd_jfs_058;
 
 SELECT * FROM customers;
+
+INSERT INTO customers (customer_code, first_name, last_name, email, phone, date_of_birth, city, state, postal_code, type, credit_limit, active)
+VALUES ('CUST26001', 'Ananya', 'Iyer', 'ananya.iyer@example.test', '9876502001', '1995-04-11', 'Bengaluru', 'Karnataka', '560001', 'PREMIUM', 75000.00, TRUE);
+
+INSERT INTO customers (customer_code, first_name, last_name, email, phone, date_of_birth, city, state, postal_code, type, credit_limit, active)
+VALUES ('CUST26002', 'Rohan', 'Das', 'rohan.das@example.test', NULL, NULL, 'Kolkata', 'West Bengal', '700001', 'REGULAR', 0.00, TRUE);
+
+INSERT INTO customers (customer_code, first_name, last_name, email, phone, date_of_birth, city, state, postal_code, type, credit_limit, active)
+VALUES ('CUST26003', 'Meera', 'Shah', 'meera.shah@example.test', '9876502003', '1992-08-24', 'Mumbai', 'Maharashtra', '400001', 'CORPORATE', 250000.00, TRUE),
+('CUST26004', 'Arjun', 'Reddy', 'arjun.reddy@example.test', '9876502004', '1988-01-19', 'Hyderabad', 'Telangana', '500001', 'PREMIUM', 100000.00, TRUE),
+('CUST26005', 'Nisha', 'Menon', 'nisha.menon@example.test', NULL, NULL, 'Kochi', 'Kerala', '682001', 'REGULAR', 0.00, FALSE);
+
+-- duplicate email
+INSERT INTO customers (customer_code, first_name, last_name, email, phone, date_of_birth, city, state, postal_code, type, credit_limit, active)
+VALUES ('CUST26006', 'Test', 'Customer', 'ananya.iyer@example.test', '9876502006', '1995-05-10', 'Delhi', 'Delhi', '110001', 'REGULAR', 5000.00, TRUE);
+
+-- negative credit limit
+INSERT INTO customers (customer_code, first_name, last_name, email, phone, date_of_birth, city, state, postal_code, type, credit_limit, active)
+VALUES ('CUST26007', 'Negative', 'Limit', 'negative@example.test', '9876502007', '1995-05-10', 'Delhi', 'Delhi', '110002', 'REGULAR', -5000.00, TRUE);
+
+-- customer type GOLD
+INSERT INTO customers (customer_code, first_name, last_name, email, phone, date_of_birth, city, state, postal_code, type, credit_limit, active)
+VALUES ('CUST26008', 'Gold', 'Customer', 'gold@example.test', '9876502008', '1995-05-10', 'Delhi', 'Delhi', '110003', 'GOLD', 10000.00, TRUE);
+
+UPDATE customers SET credit_limit = credit_limit*1.10 WHERE type = 'PREMIUM' AND active = TRUE;
+
+UPDATE customers SET phone = '9876502002' WHERE customer_code = 'CUST26002';
+
+UPDATE customers SET city = 'Secunderabad', postal_code = '500003' WHERE customer_code = 'CUST26004';
+
+UPDATE customers SET credit_limit = 275000.00 WHERE customer_code = 'CUST26003';
+
+-- duplicate phone
+UPDATE customers SET phone = '9876502001' WHERE customer_code = 'CUST26002';
+
+SELECT * FROM customers WHERE active = FALSE;
+
+DELETE FROM customers WHERE active = FALSE;
+
+INSERT INTO customers (customer_code, first_name, last_name, email, phone, date_of_birth, city, state, postal_code, type, credit_limit, active)
+VALUES ('CUST-TEMP-01', 'Temporary', 'Customer', 'temporary@example.test', '9876502099', '1995-01-01', 'Hyderabad', 'Telangana', '500001', 'REGULAR', 0.00, TRUE);
+
+SELECT * FROM customers WHERE customer_code = 'CUST-TEMP-01';
+
+DELETE FROM customers WHERE customer_code = 'CUST-TEMP-01';

@@ -1,27 +1,44 @@
-CREATE TABLE products (
-    product_id INT NOT NULL AUTO_INCREMENT,
-    sku VARCHAR(20) NOT NULL,
-    product_name VARCHAR(150) NOT NULL,
-    category VARCHAR(80) NOT NULL,
-    brand VARCHAR(80),
-    unit_price DECIMAL(12, 2) NOT NULL,
-    quantity_in_stock INT UNSIGNED NOT NULL DEFAULT 0,
-    reorder_level INT UNSIGNED  NOT NULL DEFAULT 5,
-    manufacture_date DATE,
-    expiry_date DATE,
-    product_status VARCHAR(15) DEFAULT 'ACTIVE',
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT `uq_sku` UNIQUE (sku),
-    CONSTRAINT `pk_products_product_id` PRIMARY KEY (product_id),
-    CONSTRAINT `chk_unit_price_greater_than_0` CHECK (unit_price > 0),
-    CONSTRAINT `chk_quantity_in_stock_non_negative` CHECK (quantity_in_stock >= 0),
-    CONSTRAINT `chk_reorder_level_non_negative` CHECK (reorder_level >= 0),
-    CONSTRAINT `chk_expiry_date` CHECK (expiry_date IS NULL OR manufacture_date IS NULL OR expiry_date > manufacture_date)
-);
+use cdg_hyd_jfs_058;
 
-INSERT INTO products (sku, product_name, category, brand, unit_price, quantity_in_stock, reorder_level, manufacture_date, expiry_date) VALUES ('sku_1', 'Chips', 'Namkeen', 'Lays', 18, 25, 4, '2025-09-23', '2026-09-22');
+SELECT * FROM products;
 
-INSERT INTO products (sku, product_name, category, brand, unit_price, quantity_in_stock, reorder_level, manufacture_date, expiry_date) VALUES ('sku_33', 'Laptop', 'Electronics', 'HP', 98999, 57, 1, '2026-04-17', NULL);
+INSERT INTO products (sku, product_name, category, brand, unit_price, quantity_in_stock, reorder_level, manufacture_date, expiry_date, product_status)
+VALUES ('SKU-CBL-001', 'usb-c Cable', 'Accessories', 'TechLine', 399.00, 50, 10, NULL, NULL, 'ACTIVE');
 
-INSERT INTO products (sku, product_name, category, brand, unit_price, quantity_in_stock, reorder_level, manufacture_date, expiry_date) VALUES ('sku_2', 'Orange Juice', 'Juices', 'Paper Boat', - 24, 30, 3, '2026-04-17', '2026-02-16');
+INSERT INTO products (sku, product_name, category, brand, unit_price, quantity_in_stock, reorder_level, manufacture_date, expiry_date, product_status)
+VALUES ('SKU-KBD-002', 'Wireless Keyboard', 'Accessories', 'KeyPro', 1499.00, 8, 5, '2026-01-15', NULL, 'ACTIVE'),
+('SKU-JCE-003', 'Orange Juice', 'Beverages', 'FreshDrop', 120.00, 0, 20, '2026-09-01', '2026-12-01', 'OUT_OF_STOCK');
+
+INSERT INTO products (sku, product_name, category, brand, unit_price, quantity_in_stock, reorder_level, manufacture_date, expiry_date, product_status)
+VALUES ('SKU-NTB-004', 'A5 Notebook', 'Stationery', 'PaperNest', 75.00, 120, 25, NULL, NULL, 'ACTIVE'),
+('SKU-OLD-005', 'Legacy Adapter', 'Accessories', '	WireMax', 299.00, 0, 20, NULL, NULL, 'DISCONTINUED');
+
+-- negative price
+INSERT INTO products (sku, product_name, category, brand, unit_price, quantity_in_stock, reorder_level, manufacture_date, expiry_date, product_status)
+VALUES ('SKU-CBL-006', 'usb-c Cable', 'Accessories', 'TechLine', -399.00, 10, 4, NULL, NULL, 'ACTIVE');
+
+-- expiry date is earlier than manufacture date
+INSERT INTO products (sku, product_name, category, brand, unit_price, quantity_in_stock, reorder_level, manufacture_date, expiry_date, product_status)
+VALUES ('SKU-CBL-007', 'Lemon Juice', 'Beverages', 'Sprite', 140.50, 27, 7, '2026-09-01', '2026-05-01', 'ACTIVE');
+
+-- duplicate sku
+INSERT INTO products (sku, product_name, category, brand, unit_price, quantity_in_stock, reorder_level, manufacture_date, expiry_date, product_status)
+VALUES ('SKU-CBL-001', 'Jeans', 'Clothes', 'Levis', 1399.00, 10, 5, NULL, NULL, 'ACTIVE');
+
+UPDATE products SET quantity_in_stock = quantity_in_stock+60, product_status = 'ACTIVE' WHERE product_name = 'Orange Juice';
+
+UPDATE products SET unit_price = ROUND(unit_price*1.05, 2) WHERE category = 'Accessories';
+
+UPDATE products SET brand = NULL WHERE brand = 'PaperNest';
+
+UPDATE products SET reorder_level = 15 WHERE product_status = 'ACTIVE' AND quantity_in_stock < 10;
+
+UPDATE products SET quantity_in_stock = -1 WHERE sku = 'SKU-CBL-001';
+
+SELECT * FROM products where sku = 'SKU-OLD-005';
+DELETE FROM products where sku = 'SKU-OLD-005';
+
+INSERT INTO products (sku, product_name, category, brand, unit_price, quantity_in_stock, reorder_level, manufacture_date, expiry_date, product_status)
+VALUES ('SKU-TEMP-999', 'Jeans', 'Clothes', 'Levis', 1399.00, 10, 4, NULL, NULL, 'ACTIVE');
+SELECT * FROM products WHERE sku = 'SKU-TEMP-999';
+DELETE FROM products WHERE sku = 'SKU-TEMP-999';

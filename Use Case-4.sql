@@ -1,31 +1,54 @@
-CREATE TABLE books (
-    book_id INT NOT NULL AUTO_INCREMENT,
-    isbn CHAR(13) NOT NULL,
-    title VARCHAR(200) NOT NULL,
-    author_name VARCHAR(120) NOT NULL,
-    genre VARCHAR(60) NOT NULL,
-    publisher VARCHAR(120),
-    publication_year SMALLINT NOT NULL,
-    page_count SMALLINT NOT NULL,
-    book_format VARCHAR(20) NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    copies_available INT NOT NULL,
-    LANGUAGE VARCHAR(40) NOT NULL DEFAULT 'English',
-    added_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT `pk_books_book_id` PRIMARY KEY (book_id),
-    CONSTRAINT `uq_isbn` UNIQUE (isbn),
-    CONSTRAINT `chk_publication_year_between_1000_2100` CHECK (publication_year BETWEEN 1000 AND 2100),
-    CONSTRAINT `chk_page_count_greater_than_0` CHECK (page_count > 0),
-    CONSTRAINT `chk_price_non_negative` CHECK (price >= 0),
-    CONSTRAINT `chk_copies_available_non_negative` CHECK (copies_available >= 0)
-);
-
-INSERT INTO books (isbn, title, author_name, genre, publisher, publication_year, page_count, book_format, price, copies_available) VALUES ('1234567890123', 'Harry Potter', 'J K Rowling', 'Fictional', 'BloomsBury', 1997, 946, 'Paperback', 2400, 500);
-
-INSERT INTO books (isbn, title, author_name, genre, publisher, publication_year, page_count, book_format, price, copies_available) VALUES ('274028461047', 'Rich Dad Poor Dad', 'Robert & Sharon', 'Personal Finance', 'Warner Books', 2123, 336, 'Paperback', 300, 170);
-
-INSERT INTO BOOKS (isbn, title, author_name, genre, publisher, publication_year, page_count, book_format, price, copies_available) VALUES ('9780132350886', 'Empty Leaflet', 'Jane Smith', 'Minimalism', NULL, 2023, 0, 'E-book', 0.00, 100);
-
-INSERT INTO BOOKS (isbn, title, author_name, genre, publisher, publication_year, page_count, book_format, price, copies_available) VALUES ('123', 'Short ISBN Book', 'Writer X', 'General', NULL, 2020, 150, 'Paperback', 9.99, 2);
+use cdg_hyd_jfs_058;
 
 SELECT * FROM books;
+
+INSERT INTO books (isbn, title, author, genre, publisher, publication_year, pages, format, price, copies, language)
+VALUES ('9780134685991', 'Effective Java', 'Joshua Bloch', 'Programming', 'Addison-Wesley', 2018, 416, 'HARDCOVER', 4500.00, 6, 'English');
+
+INSERT INTO books (isbn, title, author, genre, publisher, publication_year, pages, format, price, copies, language)
+VALUES ('9780132350884', 'Clean Code', 'Robert C. Martin', 'Programming', 'Prentice Hall', 2008, 464, 'PAPERBACK', 3200.00, 12, 'English'),
+('9780262046305', 'Introduction to Algorithms', 'Thomas H. Cormen', 'Computer Science', 'MIT Press', 2022, 1312, 'HARDCOVER', 6500.00, 4, 'English');
+
+INSERT INTO books (isbn, title, author, genre, publisher, publication_year, pages, format, price, copies, language)
+VALUES ('9780000000001', 'The Monsoon Trail', 'Kavya Sen', 'Fiction', NULL, 2025, 288, 'PAPERBACK', 499.00, 20, 'English'),
+('9780000000002', 'Data Stories for Beginners', 'Asha Rao', 'Education', 'Learning House', 2026, 210, 'EBOOK', 299.00, 0, 'English');
+
+INSERT INTO books (isbn, title, author, genre, publisher, publication_year, pages, format, price, copies, language)
+VALUES ('9780000000003', 'Old Book', 'Test Author', 'Fiction', 'Test Publisher', 999, 200, 'PAPERBACK', 500.00, 5, 'English');
+
+INSERT INTO books (isbn, title, author, genre, publisher, publication_year, pages, format, price, copies, language)
+VALUES ('9780000000004', 'Zero Pages Book', 'Test Author', 'Fiction', 'Test Publisher', 2025, 0, 'PAPERBACK', 500.00, 5, 'English');
+
+
+INSERT INTO books (isbn, title, author, genre, publisher, publication_year, pages, format, price, copies, language)
+VALUES ('9780000000005', 'Negative Price Book', 'Test Author', 'Fiction', 'Test Publisher', 2025, 200, 'PAPERBACK', -500.00, 5, 'English');
+
+
+INSERT INTO books (isbn, title, author, genre, publisher, publication_year, pages, format, price, copies, language)
+VALUES ('9780000000006', 'Audio Book', 'Test Author', 'Fiction', 'Test Publisher', 2025, 200, 'AUDIOBOOK', 500.00, 5, 'English');
+
+
+INSERT INTO books (isbn, title, author, genre, publisher, publication_year, pages, format, price, copies, language)
+VALUES ('9780134685991', 'Duplicate Book', 'Test Author', 'Fiction', 'Test Publisher', 2025, 200, 'PAPERBACK', 500.00, 5, 'English');
+
+UPDATE books SET copies = copies+10 WHERE title = 'Clean Code';
+
+UPDATE books SET price = ROUND(price*0.90, 2) WHERE format = 'EBOOK';
+
+UPDATE books SET publisher = 'Riverleaf Press' WHERE title = 'The Monsoon Trail';
+
+UPDATE books SET copies = 15 WHERE title = 'Data Stories for Beginners';
+
+
+UPDATE books SET pages = 0 WHERE isbn = '9780134685991';
+
+SELECT * FROM books WHERE isbn = '9780000000001';
+
+DELETE FROM books WHERE isbn = '9780000000001';
+
+INSERT INTO books (isbn, title, author, genre, publisher, publication_year, pages, format, price, copies, language)
+VALUES ('9780000000999', 'Temporary Book', 'Temporary Author', 'Fiction', 'Temporary Publisher', 2026, 100, 'PAPERBACK', 199.00, 5, 'English');
+
+SELECT * FROM books WHERE isbn = '9780000000999';
+
+DELETE FROM books WHERE isbn = '9780000000999';

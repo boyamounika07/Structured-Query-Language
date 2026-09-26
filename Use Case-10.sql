@@ -1,80 +1,52 @@
-
 use cdg_hyd_jfs_058;
-CREATE TABLE support_tickets (
-    ticket_id INT AUTO_INCREMENT PRIMARY KEY,
 
-    ticket_number VARCHAR(20) NOT NULL UNIQUE,
-
-    requester_name VARCHAR(120) NOT NULL,
-    requester_email VARCHAR(120) NOT NULL,
-
-    subject VARCHAR(200) NOT NULL,
-    description TEXT NOT NULL,
-
-    category VARCHAR(20) NOT NULL,
-    priority VARCHAR(20) NOT NULL DEFAULT 'MEDIUM',
-    ticket_status VARCHAR(20) NOT NULL DEFAULT 'OPEN',
-
-    assigned_agent VARCHAR(120) NULL,
-
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    resolved_at TIMESTAMP NULL,
-
-    last_updated_at TIMESTAMP NOT NULL
-        DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
-
-    CHECK (category IN ('BILLING', 'TECHNICAL', 'ACCOUNT', 'GENERAL')),
-
-    CHECK (priority IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL')),
-
-    CHECK (ticket_status IN ('OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED')),
-
-    CHECK (
-        resolved_at IS NULL
-        OR resolved_at >= created_at
-    )
-);
-INSERT INTO support_tickets
-(ticket_number, requester_name, requester_email, subject, description, category)
-VALUES
-('TCK001', 'Mounika', 'mounika@example.com',
- 'Login Issue', 'Unable to login to the dashboard.',
- 'TECHNICAL');
-
-
-INSERT INTO support_tickets
-(ticket_number, requester_name, requester_email, subject, description,
- category, priority, ticket_status, assigned_agent)
-VALUES
-('TCK002', 'Bittu', 'bittu@example.com',
- 'Payment Issue', 'Payment was deducted twice.',
- 'BILLING', 'HIGH', 'IN_PROGRESS', 'Arjun');
-
-
-INSERT INTO support_tickets
-(ticket_number, requester_name, requester_email, subject, description,
- category, priority, ticket_status)
-VALUES
-('TCK003', 'Ram', 'ram@example.com',
- 'Password Reset', 'Unable to reset account password.',
- 'ACCOUNT', 'MEDIUM', 'OPEN');
-
-
-INSERT INTO support_tickets
-(ticket_number, requester_name, requester_email, subject, description,
- category, priority, ticket_status, assigned_agent)
-VALUES
-('TCK004', 'Rani', 'Rani@example.com',
- 'Application Error', 'Application crashes after login.',
- 'TECHNICAL', 'CRITICAL', 'IN_PROGRESS', 'Kiran');
-
-
-INSERT INTO support_tickets
-(ticket_number, requester_name, requester_email, subject, description,
- category, priority, ticket_status)
-VALUES
-('TCK005', 'Latha', 'latha@example.com',
- 'General Question', 'Need information about available services.',
- 'GENERSELECT * AL', 'LOW', 'OPEN');
 SELECT * FROM support_tickets;
+
+INSERT INTO support_tickets (ticket_number, requester_name, requester_email, subject, description, category, priority, status, assigned_agent, resolved_time)
+VALUES ('TKT-26001', 'Asha Rao', 'asha.rao@example.test', 'Unable to reset password', 'Reset link is not arriving', 'ACCOUNT', 'HIGH', 'OPEN', NULL, NULL);
+
+INSERT INTO support_tickets (ticket_number, requester_name, requester_email, subject, description, category, priority, status, assigned_agent, resolved_time)
+VALUES ('TKT-26002', 'Dev Stores', 'dev.stores@example.test', 'Incorrect invoice total', 'The latest invoice contains an extra charge', 'BILLING', 'MEDIUM', 'IN_PROGRESS', 'Neha', NULL),
+('TKT-26003', 'Meera Nair', 'meera.nair@example.test', 'Application crashes', 'Application closes while uploading a file', 'TECHNICAL', 'CRITICAL', 'OPEN', 'Vikram', NULL);
+
+INSERT INTO support_tickets (ticket_number, requester_name, requester_email, subject, description, category, priority, status, assigned_agent, resolved_time)
+VALUES ('TKT-26004', 'Omar Ali', 'omar.ali@example.test', 'Change registered email', 'Request to replace the account email', 'ACCOUNT', 'LOW', 'OPEN', NULL, NULL),
+('TKT-26005', 'Test User', 'test.user@example.test', 'Sample resolved request', 'Temporary ticket used for delete practice', 'GENERAL', 'MEDIUM', 'RESOLVED', 'QA Agent', CURRENT_TIMESTAMP);
+
+-- invalid category
+INSERT INTO support_tickets (ticket_number, requester_name, requester_email, subject, description, category, priority, status, assigned_agent, resolved_time)
+VALUES ('TKT-26006', 'Test User', 'test6@example.test', 'Shipping issue', 'Test invalid category', 'SHIPPING', 'HIGH', 'OPEN', NULL, NULL);
+
+-- invalid priority
+INSERT INTO support_tickets (ticket_number, requester_name, requester_email, subject, description, category, priority, status, assigned_agent, resolved_time)
+VALUES ('TKT-26007', 'Test User', 'test7@example.test', 'Urgent issue', 'Test invalid priority', 'TECHNICAL', 'URGENT', 'OPEN', NULL, NULL);
+
+
+
+
+INSERT INTO support_tickets (ticket_number, requester_name, requester_email, subject, description, category, priority, status, assigned_agent, resolved_time)
+VALUES ('TKT-26001', 'Duplicate User', 'duplicate@example.test', 'Duplicate ticket', 'Duplicate ticket number test', 'GENERAL', 'LOW', 'OPEN', NULL, NULL);
+
+
+
+
+UPDATE support_tickets SET assigned_agent = 'Kavya', status = 'IN_PROGRESS' WHERE ticket_number = 'TKT-26001';
+
+UPDATE support_tickets SET status = 'RESOLVED', resolved_time = CURRENT_TIMESTAMP WHERE ticket_number = 'TKT-26003';
+
+UPDATE support_tickets SET priority = 'MEDIUM' WHERE category = 'ACCOUNT' AND status = 'OPEN' AND priority = 'LOW';
+
+UPDATE support_tickets SET assigned_agent = 'Rahul' WHERE ticket_number = 'TKT-26002';
+
+
+UPDATE support_tickets SET resolved_time = '2026-09-24 11:00:00' WHERE ticket_number = 'TKT-26002';
+
+SELECT * FROM support_tickets WHERE ticket_number = 'TKT-26005';
+DELETE FROM support_tickets WHERE ticket_number = 'TKT-26005';
+
+INSERT INTO support_tickets (ticket_number, requester_name, requester_email, subject, description, category, priority, status, assigned_agent, resolved_time)
+VALUES ('TKT-TEMP-01', 'Temporary User', 'temp@example.test', 'Temporary ticket', 'Temporary ticket for delete practice', 'GENERAL', 'LOW', 'OPEN', NULL, NULL);
+
+SELECT * FROM support_tickets WHERE ticket_number = 'TKT-TEMP-01';
+
+DELETE FROM support_tickets WHERE ticket_number = 'TKT-TEMP-01';

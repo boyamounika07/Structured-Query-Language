@@ -1,34 +1,56 @@
-CREATE TABLE movies (
-    movie_id INT AUTO_INCREMENT,
-    movie_code VARCHAR(12),
-    title VARCHAR(200) NOT NULL,
-    genre VARCHAR(60) NOT NULL,
-    original_language VARCHAR(40) NOT NULL,
-    release_date DATE,
-    duration_minutes SMALLINT NOT NULL,
-    director_name VARCHAR(120) NOT NULL,
-    age_certificate VARCHAR(20) NOT NULL DEFAULT 'UNRATED',
-    audience_rating DECIMAL(3,1),
-    production_budget DECIMAL(15,2),
-    catalog_status VARCHAR(20) NOT NULL DEFAULT 'UPCOMING',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT `pk_movies_movie_id` PRIMARY KEY (movie_id),
-    CONSTRAINT `uq_movie_code` UNIQUE (movie_code),
-    CONSTRAINT `chk_duration_minutes` CHECK (duration_minutes > 0),
-    CONSTRAINT `chk_audience_rating` CHECK (audience_rating IS NULL OR audience_rating BETWEEN 0.0 AND 10.0),
-    CONSTRAINT `chk_budget_non_negative` CHECK (production_budget IS NULL OR production_budget >= 0)
-);
+use cdg_hyd_jfs_058;
 
-INSERT INTO movies
-(movie_code, title, genre, original_language, duration_minutes, director_name)
-VALUES
-('MOV-2145', 'Veera Simha', 'Action', 'Telugu', 148, 'Ravi Varma');
+SELECT * FROM hotel_rooms;
 
-INSERT INTO movies
-(movie_code, title, genre, original_language, release_date, duration_minutes,
- director_name, age_certificate, audience_rating, production_budget, catalog_status)
-VALUES
-('MOV-7632', 'Midnight Journey', 'Thriller Drama', 'Telugu', '2026-08-15', 162,
- 'Kiran Reddy', 'U/A', 8.2, 750000000.00, 'RELEASED');
-SELECT * FROM movies;
+INSERT INTO hotel_rooms (room_number, room_type, floor, beds, maximum_occupancy, price_per_night, availability, air_conditioning, smoking_allowed, notes)
+VALUES ('101', 'SINGLE', 1, 1, 1, 2500.00, 'AVAILABLE', TRUE, FALSE, NULL);
+
+INSERT INTO hotel_rooms (room_number, room_type, floor, beds, maximum_occupancy, price_per_night, availability, air_conditioning, smoking_allowed, notes)
+VALUES ('102', 'DOUBLE', 1, 2, 3, 4200.00, 'OCCUPIED', TRUE, FALSE, 'City view'),
+('201', 'DELUXE', 2, 1, 2, 6500.00, 'RESERVED', TRUE, FALSE, 'Balcony');
+
+INSERT INTO hotel_rooms (room_number, room_type, floor, beds, maximum_occupancy, price_per_night, availability, air_conditioning, smoking_allowed, notes)
+VALUES ('301', 'SUITE', 3, 2, 4, 12000.00, 'AVAILABLE', TRUE, FALSE, 'Sea view'),
+('T99', 'SINGLE', 9, 1, 1, 1000.00, 'MAINTENANCE', FALSE, FALSE, 'Training room');
+
+
+INSERT INTO hotel_rooms (room_number, room_type, floor, beds, maximum_occupancy, price_per_night, availability, air_conditioning, smoking_allowed, notes)
+VALUES ('401', 'SINGLE', 4, 0, 1, 2500.00, 'AVAILABLE', TRUE, FALSE, NULL);
+
+
+INSERT INTO hotel_rooms (room_number, room_type, floor, beds, maximum_occupancy, price_per_night, availability, air_conditioning, smoking_allowed, notes)
+VALUES ('402', 'SINGLE', 4, 1, 0, 2500.00, 'AVAILABLE', TRUE, FALSE, NULL);
+
+
+INSERT INTO hotel_rooms (room_number, room_type, floor, beds, maximum_occupancy, price_per_night, availability, air_conditioning, smoking_allowed, notes)
+VALUES ('403', 'SINGLE', 4, 1, 1, 0.00, 'AVAILABLE', TRUE, FALSE, NULL);
+
+
+INSERT INTO hotel_rooms (room_number, room_type, floor, beds, maximum_occupancy, price_per_night, availability, air_conditioning, smoking_allowed, notes)
+VALUES ('404', 'SINGLE', 4, 1, 1, 2500.00, 'CLEANING', TRUE, FALSE, NULL);
+
+
+INSERT INTO hotel_rooms (room_number, room_type, floor, beds, maximum_occupancy, price_per_night, availability, air_conditioning, smoking_allowed, notes)
+VALUES ('101', 'DOUBLE', 1, 2, 3, 4200.00, 'AVAILABLE', TRUE, FALSE, 'Duplicate room');
+
+UPDATE hotel_rooms SET price_per_night = ROUND(price_per_night*1.10, 2) WHERE room_type = 'SUITE';
+
+UPDATE hotel_rooms SET availability = 'AVAILABLE', notes = 'Cleaning completed' WHERE room_number = '102';
+
+UPDATE hotel_rooms SET maximum_occupancy = 3, price_per_night = 7000.00 WHERE room_number = '201';
+
+UPDATE hotel_rooms SET availability = 'MAINTENANCE', notes = 'Scheduled for removal' WHERE room_number = 'T99';
+
+
+UPDATE hotel_rooms SET maximum_occupancy = 0 WHERE room_number = '101';
+
+SELECT * FROM hotel_rooms WHERE room_number = 'T99';
+
+DELETE FROM hotel_rooms WHERE room_number = 'T99';
+
+INSERT INTO hotel_rooms (room_number, room_type, floor, beds, maximum_occupancy, price_per_night, availability, air_conditioning, smoking_allowed, notes)
+VALUES ('TMP1', 'SINGLE', 1, 1, 1, 1500.00, 'AVAILABLE', TRUE, FALSE, 'Temporary room');
+
+SELECT * FROM hotel_rooms WHERE room_number = 'TMP1';
+
+DELETE FROM hotel_rooms WHERE room_number = 'TMP1';
